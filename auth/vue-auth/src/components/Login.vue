@@ -46,9 +46,9 @@
           }
         })
           .then(response => {
-            // localStorage.setItem('token',response.data.access_token);
             this.access_token = response.data.access_token;
-            console.log(this.access_token);
+            localStorage.setItem('access_token', this.access_token);
+            this.$router.push({path: decodeURIComponent(this.$route.query.redirect)});
           });
       }
     },
