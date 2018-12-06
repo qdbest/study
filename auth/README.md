@@ -193,4 +193,64 @@ export default router;
 this.$router.push({path: decodeURIComponent(this.$route.query.redirect)});
 ```
 
+## Lesson 2 用JwtToken代替普通token
+
+### 后端
+- 新建JwtTokenConfig类
+```
+@Configuration
+public class JwtTokenConfig {
+    @Bean
+    public TokenStore tokenStore(){
+        return new JwtTokenStore(jwtAccessTokenConverter());
+    }
+
+    @Bean
+    public JwtAccessTokenConverter jwtAccessTokenConverter(){
+        JwtAccessTokenConverter jwtAccessTokenConverter= new JwtAccessTokenConverter();
+        jwtAccessTokenConverter.setSigningKey("yucn");
+        return jwtAccessTokenConverter;
+    }
+}
+```
+- 修改YucnAuthorizationServerConfig类
+```
+@Configuration
+@EnableAuthorizationServer
+public class YucnAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserDetailsService userDetailsService;
+    @Autowired
+    private TokenStore tokenStore;
+    // 新增
+    @Autowired
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
+
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.inMemory()
+                .withClient("test")
+                .authorizedGrantTypes("password", "refresh_token")
+                .scopes("all")
+                .secret("123456")
+                .accessTokenValiditySeconds(10000)
+                .refreshTokenValiditySeconds(10000);
+    }
+
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        endpoints.tokenStore(tokenStore)
+                .accessTokenConverter(jwtAccessTokenConverter)//这句非常重要，不加则生成普通token
+                .authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService);
+    }
+}
+```
+### 前端不需要变化，可以通过base64url解析出用户信息
+```
+this.myuser=JSON.parse(base64url.decode(this.access_token.split('.')[1]));
+```
+
 
