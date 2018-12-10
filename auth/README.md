@@ -253,7 +253,7 @@ public class YucnAuthorizationServerConfig extends AuthorizationServerConfigurer
 this.myuser=JSON.parse(base64url.decode(this.access_token.split('.')[1]));
 ```
 
-
+## Lesson-3
 ### springboot升级到2.0.7，非spring-boot-starter依赖包需要加版本号，否则，maven依赖会出现unknow情况
 - 依赖包发生变化
 ```
