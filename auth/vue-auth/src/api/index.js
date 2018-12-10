@@ -24,9 +24,9 @@ axios.interceptors.response.use(function (response) {
 });
 
 
-export const getRequest = (url, param) => {
+export const getRequest = (url, config) => {
   return new Promise((resolve, reject) => {
-    axios.get(url, param)
+    axios.get(url, config)
       .then(response => {
         resolve(response);
       })
@@ -36,9 +36,9 @@ export const getRequest = (url, param) => {
   });
 };
 
-export const postRequest = (url, ...params) => {
+export const postRequest = (url,data,config) => {
   return new Promise((resolve, reject) => {
-    axios.post(url, ...params)
+    axios.post(url,data,config)
       .then(response => {
         resolve(response);
       })

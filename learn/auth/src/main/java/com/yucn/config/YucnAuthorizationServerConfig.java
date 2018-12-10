@@ -3,7 +3,7 @@ package com.yucn.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -19,15 +19,12 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 public class YucnAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
     @Autowired
     private AuthenticationManager authenticationManager;
-    //@Autowired
-    //private UserDetailsService userDetailsService;
+    @Autowired
+    private UserDetailsService userDetailsService;
     @Autowired
     private TokenStore tokenStore;
     @Autowired
     private JwtAccessTokenConverter jwtAccessTokenConverter;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -35,8 +32,7 @@ public class YucnAuthorizationServerConfig extends AuthorizationServerConfigurer
                 .withClient("test")
                 .authorizedGrantTypes("password", "refresh_token")
                 .scopes("all")
-                //.secret("123456")
-                .secret(passwordEncoder.encode("123456"))
+                .secret("123456")
                 .accessTokenValiditySeconds(10000)
                 .refreshTokenValiditySeconds(10000);
     }
@@ -45,7 +41,7 @@ public class YucnAuthorizationServerConfig extends AuthorizationServerConfigurer
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.tokenStore(tokenStore)
                 .accessTokenConverter(jwtAccessTokenConverter)//这句非常重要，不加则生成普通token
-                .authenticationManager(authenticationManager);
-                //.userDetailsService(userDetailsService);
+                .authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService);
     }
 }
