@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: config
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/qdbest/config-repo.git
+          username: jmguoyucheng@126.com
+          password: yucn1227
+          basedir: /home/qdbest/IdeaProjects/sell/config/basedir
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+#server:
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+#  port: 8081
