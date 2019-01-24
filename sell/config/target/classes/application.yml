@@ -6,7 +6,7 @@ spring:
       server:
         git:
           uri: https://github.com/qdbest/config-repo.git
-          basedir: /home/qdbest/IdeaProjects/config/config-repo/
+          basedir: /home/qdbest/IdeaProjects/study/sell/config//config-repo/
 eureka:
   client:
     service-url:
